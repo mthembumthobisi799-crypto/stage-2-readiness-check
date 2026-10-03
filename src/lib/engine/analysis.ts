@@ -94,11 +94,15 @@ export function analyze(candles: Candle[], opts: AnalyzeOptions = {}): AnalysisR
   if (news.level === "VERY HIGH") { bull *= 0.65; bear *= 0.65; }
   else if (news.level === "HIGH") { bull *= 0.85; bear *= 0.85; }
 
-  const total = bull + bear + 2;
-  let bp = (bull + 1) / total, sp = (bear + 1) / total;
-  let rp = Math.max(0, 1 - bp - sp);
-  const s = bp + sp + rp;
-  bp /= s; sp /= s; rp /= s;
+  // V2 bug fix: V2's formula always produced a 0% ranging estimate. Ranging now gets
+  // its own evidence score from regime, AMD accumulation and a weak structure.
+  let rangeScore = 1;
+  if (reg === "RANGING") rangeScore += 2;
+  if (amd.phase === "ACCUMULATION") rangeScore += 1;
+  if (structure.state === "TRANSITIONAL" || structure.state === "UNKNOWN") rangeScore += 1;
+  const total = bull + bear + rangeScore + 2;
+  const bp = (bull + 1) / total, sp = (bear + 1) / total;
+  const rp = rangeScore / total;
   const top = Math.max(bp, sp);
 
   let decision: Decision;
