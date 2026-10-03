@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { CandleChart } from "@/components/CandleChart";
 import { DataControls } from "@/components/DataControls";
 import { analyze } from "@/lib/engine/analysis";
@@ -89,7 +89,7 @@ function AnalysisPage() {
               <dt className="text-muted-foreground">Entry zone</dt><dd>{f2(p.entryLow)} – {f2(p.entryHigh)}</dd>
               <dt className="text-muted-foreground">Stop-loss zone</dt><dd className="text-bear">{f2(p.stopZoneLow)} – {f2(p.stopZoneHigh)}</dd>
               {(["tp1", "tp2", "tp3"] as const).map((k, i) => (
-                <><dt key={k} className="text-muted-foreground">{k.toUpperCase()}</dt><dd key={k + "v"} className="text-bull">{f2(p[k])} <span className="text-muted-foreground">({p.rr[i].toFixed(2)}R)</span></dd></>
+                <Fragment key={k}><dt className="text-muted-foreground">{k.toUpperCase()}</dt><dd className="text-bull">{f2(p[k])} <span className="text-muted-foreground">({p.rr[i].toFixed(2)}R)</span></dd></Fragment>
               ))}
               <dt className="text-muted-foreground">Invalidation</dt><dd>{f2(p.invalidation)}</dd>
             </dl>

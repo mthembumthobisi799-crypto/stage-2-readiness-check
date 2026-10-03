@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { MarketDataProvider } from "../lib/market-data";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -78,20 +79,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "XAUUSD Analyst" },
+      { name: "description", content: "XAUUSD research and paper-trading analysis." },
+      { property: "og:title", content: "XAUUSD Analyst" },
+      { property: "og:description", content: "XAUUSD research and paper-trading analysis." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
@@ -121,7 +123,21 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <MarketDataProvider>
+        <header className="border-b border-border">
+          <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3">
+            <Link to="/" className="font-bold tracking-tight"><span className="text-primary">XAU</span>USD Analyst</Link>
+            <nav className="flex gap-4 text-sm">
+              <Link to="/" className="text-muted-foreground hover:text-foreground" activeProps={{ className: "text-primary" }} activeOptions={{ exact: true }}>Analysis</Link>
+              <Link to="/backtest" className="text-muted-foreground hover:text-foreground" activeProps={{ className: "text-primary" }}>Backtest</Link>
+            </nav>
+            <span className="ml-auto hidden text-xs text-muted-foreground md:block">Research · education · paper trading only — no live orders</span>
+          </div>
+        </header>
+        <main className="mx-auto max-w-7xl px-4 py-6">
+          <Outlet />
+        </main>
+      </MarketDataProvider>
     </QueryClientProvider>
   );
 }
